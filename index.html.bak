@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RPG Maker Interactive Map (Test)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+
+  html, body {
+    margin: 0;
+    height: 100%;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+    cursor: default;
+  }
+
+  @font-face {
+    font-family: "FOT-NewCinemaAStd-D";
+    src: url("FOT-NewCinemaAStd-D.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  /* Popup styling */
+  .leaflet-popup.pin_popup .leaflet-popup-content-wrapper {
+    background: #fff;
+    color: black;
+    font-family: "FOT-NewCinemaAStd-D", sans-serif;
+    font-size: 12px;
+    padding: 1px 1px;
+    border: 2px solid black;
+    border-radius: 6px;
+    min-width: 0;
+    max-width: 600px;
+    width: 600;
+  }
+
+	.leaflet-popup.pin_popup .leaflet-popup-tip {
+	  background: transparent; /* important */
+	  border-left: 5px solid transparent;
+	  border-right: 5px solid transparent;
+	  border-top: 30px solid #fff; /* the arrow color */
+	  width: 0;
+	  height: 0;
+	}
+
+  .leaflet-popup.pin_popup {
+    box-shadow: none;
+  }
+
+  /* Map title styling */
+	.map-title {
+	  position: absolute;
+	  color: white;
+	  font-size: 50px;
+	  font-weight: bold;
+	  text-shadow: 0 0 10px black;
+	  opacity: 0;
+	  transition: opacity 1s ease;
+	  pointer-events: none;
+	  z-index: 9999;
+
+	  max-width: 1200px;    /* or whatever is wide enough for the longest map title */
+	  width: 1000px;          /* fixed width prevents wrapping mid-word */
+	  text-align: center;
+	  white-space: pre-line; /* respects \n */
+	}
+
+	
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ==================== UNIVERSAL SETUP ====================
+const map = L.map('map', {
+  crs: L.CRS.Simple,
+  minZoom: 0,
+  maxZoom: 0,
+  zoomControl: false
+});
+
+// Cursor visuals
+map.getContainer().style.cursor = 'default';
+map.on('dragstart', () => map.getContainer().style.cursor = 'grab');
+map.on('dragend', () => map.getContainer().style.cursor = 'default');
+
+// Overlay + markers
+let currentOverlay = null;
+let currentMarkers = L.layerGroup().addTo(map);
+
+// Show map title at a specific map coordinate
+function showMapTitleAt(lat, lng, text, duration = 2500) {
+	const titleIcon = L.divIcon({
+	  html: '<div class="map-title">' + text + '</div>',
+	  className: '',
+	  iconSize: null,
+	  iconAnchor: [490, 0] // roughly half of max-width (adjust if needed)
+	});
+
+  const titleMarker = L.marker([lat, lng], { icon: titleIcon }).addTo(currentMarkers);
+
+  setTimeout(() => {
+    const div = titleMarker.getElement().querySelector('.map-title');
+    if (div) div.style.opacity = 1;
+
+    setTimeout(() => {
+      if (div) div.style.opacity = 0;
+      setTimeout(() => currentMarkers.removeLayer(titleMarker), 1000);
+    }, duration);
+  }, 0);
+}
+
+// ==================== UNIVERSAL ICONS ====================
+const playerIcon = L.divIcon({
+  html: '<img src="Map1/player.png" style="width:42px; height:53px;">',
+  className: '',
+  iconSize: [42, 53],
+});
+
+const bonfireDivIcon = L.divIcon({
+  html: '<img src="Map1/bonfire.gif" style="width:32px; height:66px;">',
+  className: '',
+  iconAnchor: [16, 66]
+});
+
+const asabaDivIcon = L.divIcon({
+  html: '<img src="ASABA.gif" style="width:90px; height:90px;">',
+  className: '',
+  iconAnchor: [45, 90]
+});
+
+const chest1DivIcon = L.divIcon({
+  html: '<img src="chest1.png" style="width:37px; height:35px;">',
+  className: '',
+  iconAnchor: [18, 35]
+});
+
+const rightArrowDivIcon = L.divIcon({
+  html: '<img src="rightarrow.gif" style="width:50px; height:30px;">',
+  className: '',
+  iconSize: [50, 30],
+  iconAnchor: [25, 30]
+});
+
+const upArrowDivIcon = L.divIcon({
+  html: '<img src="uparrow.gif" style="width:30px; height:50px;">',
+  className: '',
+  iconSize: [30, 50],
+  iconAnchor: [15, 50]
+});
+
+const downArrowDivIcon = L.divIcon({
+  html: '<img src="downarrow.gif" style="width:30px; height:50px;">',
+  className: '',
+  iconSize: [30, 50],
+  iconAnchor: [15, 50]
+});
+
+const leftArrowDivIcon = L.divIcon({
+  html: '<img src="leftarrow.gif" style="width:50px; height:30px;">',
+  className: '',
+  iconSize: [50, 30],
+  iconAnchor: [25, 30]
+});
+
+// ==================== LOAD MAP FUNCTION ====================
+function loadMap(mapNumber) {
+  const mapData = {
+    1: { file: 'Map1/Map1.png', width: 888, height: 1176, title: "Adventurer's Path: Gathering Point\n冒險者小道:集結地\n冒険の遊歩道:集結地", titleLat: 800, titleLng: 435 },
+    2: { file: 'Map2/Map2.png', width: 1152, height: 792, title: "Adventurer's Path: Grove - 1\n冒險者小道:林間\n冒険の遊歩道:林間 ", titleLat: 775, titleLng: 580 },
+    // add more maps here...
+  };
+
+  const data = mapData[mapNumber];
+  if (!data) {
+    alert('Map not found: ' + mapNumber);
+    return;
+  }
+
+  const bounds = [[0, 0], [data.height, data.width]];
+
+  if (currentOverlay) map.removeLayer(currentOverlay);
+  currentMarkers.clearLayers();
+
+  currentOverlay = L.imageOverlay(data.file, bounds).addTo(map);
+  map.setMaxBounds(bounds);
+
+  if (mapNumber === 1) {
+    map.setView([300, data.width / 2], 0);
+  }
+
+  if (data.title) {
+    showMapTitleAt(data.titleLat, data.titleLng, data.title);
+  }
+
+  // Add pins
+  createMapPins(mapNumber);
+}
+
+// ==================== MAP PIN CREATION ====================
+function createMapPins(mapNumber) {
+  switch (mapNumber) {
+    // -------------------- MAP 1 --------------------
+    case 1:
+	  const knightIcon = L.divIcon({
+		 html: '<img src="Map1/knight.png" style="width:35px; height:53px;">',
+		 className: '',
+		 iconSize: [35, 53],
+		});
+		
+	  const dummyIcon = L.divIcon({
+		 html: '<img src="Map1/dummy.png" style="width:26px; height:52px;">',
+		 className: '',
+		 iconSize: [26, 52],
+		});		
+		
+	  const gachaIcon = L.divIcon({
+		 html: '<img src="Map1/gacha.png" style="width:31px; height:50px;">',
+		 className: '',
+		 iconSize: [31, 50],
+		});
+		
+	  const vendingIcon = L.divIcon({
+		 html: '<img src="Map1/vending.png" style="width:30px; height:60px;">',
+		 className: '',
+		 iconSize: [30, 60],
+		});	
+
+	  const kurohanyanIcon = L.divIcon({
+		 html: '<img src="Map1/player.png" style="width:42px; height:53px;">',
+		 className: '',
+		 iconSize: [42, 53],
+		});			
+		
+	  const trashIcon = L.divIcon({
+		 html: '<img src="Map1/trash.png" style="width:35px; height:45px;">',
+		 className: '',
+		 iconSize: [35, 45],
+		});	
+				
+      L.marker([100, 206], { icon: playerIcon })
+        .bindPopup('Spawn Point', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+		
+      L.marker([1025, 410], { icon: knightIcon })
+        .bindPopup('Weird Knight', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+		
+      L.marker([1079, 469], { icon: gachaIcon })
+        .bindPopup('Gachapon Machine', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+
+      L.marker([1080, 645], { icon: vendingIcon })
+        .bindPopup('Vending Machine', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);			
+
+      L.marker([953, 708], { icon: kurohanyanIcon })
+        .bindPopup('Mysterious Warrior', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+	
+      L.marker([780, 345], { icon: dummyIcon })
+        .bindPopup('Scarecrow', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+		
+      L.marker([512, 254], { icon: trashIcon })
+        .bindPopup('Trash Can', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+
+      L.marker([1130, 49], { icon: chest1DivIcon })
+        .bindPopup('Chest - R13', { className: 'pin_popup', offset: [15, -20] })
+        .addTo(currentMarkers);
+		
+      L.marker([370, 620], { icon: asabaDivIcon })
+        .bindPopup('ASABA', { className: 'pin_popup', offset: [20, -65] })
+        .addTo(currentMarkers);		
+
+	  L.marker([950, 660], { icon: bonfireDivIcon })
+	  .bindPopup('Bonfire', { className: 'pin_popup', offset: [15, -50] })
+	  .addTo(currentMarkers);
+
+      const rightArrow = L.marker([315, 858], { icon: rightArrowDivIcon })
+        .addTo(currentMarkers);
+		
+      const rightArrow2 = L.marker([717, 863], { icon: rightArrowDivIcon })
+        .addTo(currentMarkers);
+		
+      const downArrow = L.marker([5, 203], { icon: downArrowDivIcon })
+		.bindPopup('Go home early - R1', { className: 'pin_popup', offset: [20, -65] })
+        .addTo(currentMarkers);
+
+      rightArrow.on('click', () => loadMap(2));
+	  rightArrow2.on('click', () => loadMap(2));
+
+      const upArrow = L.marker([1120, 540], { icon: upArrowDivIcon })
+        .addTo(currentMarkers);
+
+      upArrow.on('click', () => loadMap(2));
+      break;
+
+    // -------------------- MAP 2 --------------------
+    case 2:
+      const leftArrow = L.marker([225, 26], { icon: leftArrowDivIcon })
+        .addTo(currentMarkers);
+
+      leftArrow.on('click', () => loadMap(1));
+      break;
+
+    // -------------------- FUTURE MAPS --------------------
+    // case 3: ...
+    // case 4: ...
+  }
+
+  // Add the marker group to map
+  currentMarkers.addTo(map);
+}
+
+// ==================== INITIAL MAP LOAD ====================
+loadMap(1);
+
+// ==================== DEBUG COORDINATES ON CLICK ====================
+map.on('click', function (e) {
+  const y = e.latlng.lat.toFixed(0);
+  const x = e.latlng.lng.toFixed(0);
+  alert(`Coordinates: [${y}, ${x}]`);
+});
+
+	
+  </script>
+</body>
+</html>
