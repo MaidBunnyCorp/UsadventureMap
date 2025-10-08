@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RPG Maker Interactive Map (Test)</title>
+  <title>Usadventure Guide Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -70,21 +70,147 @@
 	  text-align: center;
 	  white-space: pre-line; /* respects \n */
 	}
+	
+	#map-icon {
+	  position: fixed;
+	  top: 80px;
+	  left: 20px;
+	  width: 43px;
+	  height: 61px;
+	  cursor: pointer;
+	  z-index: 1000;
+	}
+	
+	#map-menu {
+	  display: flex;
+	  flex-direction: column;   /* stack items vertically */
+	  align-items: center;      /* center everything horizontally */
+	  gap: 8px;                 /* spacing between buttons */
+	  min-width: 250px;         /* menu won’t shrink too small */
+	  background: rgba(30, 30, 30, 0.9);
+	  padding: 10px;
+	  border-radius: 10px;
+	  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	  position: absolute;
+	  top: 60px;
+	  left: 20px;
+	  z-index: 2000;
+	}
+	
+	#menu-content {
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;      /* center the map buttons horizontally */
+	  width: 100%;
+	}
+
+	#map-menu .menu-btn {
+	  display: block;
+	  width: 100%;
+	  margin: 12px 0;
+	  background: linear-gradient(to bottom, #2a4d69, #1f3a50);
+	  color: #fff;
+	  border: 2px solid #3b6d8b;
+	  border-radius: 8px;
+	  padding: 8px 12px;
+	  cursor: pointer;
+	  font-weight: bold;
+	  transition: all 0.3s ease;
+	  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+	}
+
+	#map-menu .menu-btn:hover {
+	  background: #4fc1e9;
+	  color: #222;
+	  transform: scale(1.05);
+	}
+
+	#map-menu .menu-btn.active {
+	  background-color: #f39c12;
+	  color: #fff;
+	  font-weight: bold;
+	  box-shadow: 0 0 15px 5px rgba(255, 200, 0, 0.7);
+	  transform: scale(1.05);
+	}
+	
+	#close-menu {
+	  width: 50%;           /* smaller than full width */
+	  text-align: center;
+	  background: #c0392b;
+	  color: white;
+	  border: none;
+	  border-radius: 6px;
+	  padding: 6px 0;
+	  font-weight: bold;
+	  cursor: pointer;
+	  transition: all 0.2s ease;
+	}
+
+	#close-menu:hover {
+	  background: #e74c3c;
+	}
+		
+	#map-category-menu {
+	  display: flex;
+	  gap: 6px;         /* spacing between categories */
+	  margin-bottom: 10px;
+	}
+
+	.category-btn {
+	  background: #2a4d69;   /* keep it simple */
+	  color: #fff;
+	  border: 2px solid #3b6d8b;
+	  border-radius: 6px;
+	  padding: 4px 10px;
+	  cursor: pointer;
+	}
+
+	.category-btn.active {
+	  background: #4fc1e9;   /* highlight selected category */
+	  color: #222;
+	}
+
 
 	
 </style>
 </head>
 <body>
+
+<img id="map-icon" src="MapIcon.png" alt="Map toggle">
+
+
+<div id="map-menu">
+  <div id="map-category-menu">
+    <button class="category-btn" data-category="outside">Outside</button>
+    <button class="category-btn" data-category="abyss">Abyss</button>
+    <button class="category-btn" data-category="mines">Mines</button>
+  </div>
+
+  <div id="menu-content">
+    <!-- Outside maps -->
+    <button class="menu-btn" data-map="1" data-category="outside">Adventurer's Path: Gathering Point</button>
+    <button class="menu-btn" data-map="2" data-category="outside">Adventurer's Path: Grove - 1</button>
+    <!-- Abyss maps -->
+    <button class="menu-btn" data-map="3" data-category="abyss">Ruins</button>
+    <!-- Mines maps -->
+    <button class="menu-btn" data-map="4" data-category="mines">Excavation Site (Mine Tunnels)</button>
+  </div>
+
+  <button id="close-menu">Close Map</button>
+</div>
+
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ==================== UNIVERSAL SETUP ====================
 const map = L.map('map', {
   crs: L.CRS.Simple,
-  minZoom: 0,
+  minZoom: -1,
   maxZoom: 0,
-  zoomControl: false
+  zoomControl: true
 });
+
+let currentMap = 1; // default starting map
 
 // Cursor visuals
 map.getContainer().style.cursor = 'default';
@@ -93,7 +219,8 @@ map.on('dragend', () => map.getContainer().style.cursor = 'default');
 
 // Overlay + markers
 let currentOverlay = null;
-let currentMarkers = L.layerGroup().addTo(map);
+let currentGroups = L.layerGroup().addTo(map);
+const mapMarkers = {};
 
 // Show map title at a specific map coordinate
 function showMapTitleAt(lat, lng, text, duration = 2500) {
@@ -101,10 +228,10 @@ function showMapTitleAt(lat, lng, text, duration = 2500) {
 	  html: '<div class="map-title">' + text + '</div>',
 	  className: '',
 	  iconSize: null,
-	  iconAnchor: [490, 0] // roughly half of max-width (adjust if needed)
+	  iconAnchor: [0, 100] // roughly half of max-width (adjust if needed)
 	});
 
-  const titleMarker = L.marker([lat, lng], { icon: titleIcon }).addTo(currentMarkers);
+  const titleMarker = L.marker([lat, lng], { icon: titleIcon }).addTo(currentGroups);
 
   setTimeout(() => {
     const div = titleMarker.getElement().querySelector('.map-title');
@@ -112,34 +239,82 @@ function showMapTitleAt(lat, lng, text, duration = 2500) {
 
     setTimeout(() => {
       if (div) div.style.opacity = 0;
-      setTimeout(() => currentMarkers.removeLayer(titleMarker), 1000);
+      setTimeout(() => currentGroups.removeLayer(titleMarker), 1000);
     }, duration);
   }, 0);
 }
 
+const closeMenuBtn = document.getElementById('close-menu');
+
+closeMenuBtn.addEventListener('click', () => {
+  mapMenu.style.display = 'none';
+});
+
+const menuButtons = document.querySelectorAll('.menu-btn');
+const categoryButtons = document.querySelectorAll('.category-btn');
+
+// Show only the maps of a certain category + Close button
+function showCategory(category) {
+  menuButtons.forEach(btn => {
+    if (btn.id === 'close-menu' || btn.dataset.category === category) {
+      btn.style.display = 'block';
+    } else {
+      btn.style.display = 'none';
+    }
+  });
+}
+
+// Highlight the category button
+function highlightCategory(category) {
+  categoryButtons.forEach(catBtn => {
+    catBtn.classList.toggle(
+      'active',
+      catBtn.getAttribute('data-category') === category
+    );
+  });
+}
+
+categoryButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const category = btn.getAttribute('data-category');
+    showCategory(category);
+    highlightCategory(category);
+  });
+});
+
+window.addEventListener('load', () => {
+  const startingBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
+  if (startingBtn) {
+    const startingCategory = startingBtn.dataset.category;
+    showCategory(startingCategory);   // will only show map buttons of that category
+    highlightCategory(startingCategory); // highlight the corresponding category button
+  }
+});
+
+
 // ==================== UNIVERSAL ICONS ====================
 const playerIcon = L.divIcon({
-  html: '<img src="Map1/player.png" style="width:42px; height:53px;">',
+  html: '<img src="Map1/player.png" style="width:53px; height:64px;">',
   className: '',
-  iconSize: [42, 53],
+  iconSize: [53, 64],
 });
 
 const bonfireDivIcon = L.divIcon({
-  html: '<img src="Map1/bonfire.gif" style="width:32px; height:66px;">',
+  html: '<img src="Map1/bonfire.gif" style="width:46px; height:95px;">',
   className: '',
-  iconAnchor: [16, 66]
+  iconAnchor: [23, 95]
 });
 
 const asabaDivIcon = L.divIcon({
-  html: '<img src="ASABA.gif" style="width:90px; height:90px;">',
+  html: '<img src="ASABA.gif" style="width:96px; height:96px;">',
   className: '',
-  iconAnchor: [45, 90]
+  iconAnchor: [48, 96]
 });
 
 const chest1DivIcon = L.divIcon({
-  html: '<img src="chest1.png" style="width:37px; height:35px;">',
+  html: '<img src="chest1.png" style="width:49px; height:46px;">',
   className: '',
-  iconAnchor: [18, 35]
+  iconAnchor: [24, 46]
 });
 
 const rightArrowDivIcon = L.divIcon({
@@ -173,133 +348,175 @@ const leftArrowDivIcon = L.divIcon({
 // ==================== LOAD MAP FUNCTION ====================
 function loadMap(mapNumber) {
   const mapData = {
-    1: { file: 'Map1/Map1.png', width: 888, height: 1176, title: "Adventurer's Path: Gathering Point\n冒險者小道:集結地\n冒険の遊歩道:集結地", titleLat: 800, titleLng: 435 },
-    2: { file: 'Map2/Map2.png', width: 1152, height: 792, title: "Adventurer's Path: Grove - 1\n冒險者小道:林間\n冒険の遊歩道:林間 ", titleLat: 775, titleLng: 580 },
-    // add more maps here...
+    1: {
+      file: 'Map1/Map1.png',
+      width: 1776,
+      height: 2352,
+      title: "Adventurer's Path: Gathering Point\n冒險者小道:集結地\n冒険の遊歩道:集結地",
+      titleLat: 800,
+      titleLng: 435
+    },
+    2: {
+      file: 'Map2/Map2.png',
+      width: 2304,
+      height: 1584,
+      title: "Adventurer's Path: Grove - 1\n冒險者小道:林間\n冒険の遊歩道:林間",
+      titleLat: 775,
+      titleLng: 580
+    },
   };
 
   const data = mapData[mapNumber];
-  if (!data) {
-    alert('Map not found: ' + mapNumber);
-    return;
-  }
+  if (!data) { alert('Map not found: ' + mapNumber); return; }
 
   const bounds = [[0, 0], [data.height, data.width]];
 
+  // Remove previous overlay
   if (currentOverlay) map.removeLayer(currentOverlay);
-  currentMarkers.clearLayers();
-
   currentOverlay = L.imageOverlay(data.file, bounds).addTo(map);
   map.setMaxBounds(bounds);
 
-  if (mapNumber === 1) {
-    map.setView([300, data.width / 2], 0);
+  // Remove only old marker groups (pins/arrows) except the current map
+  Object.keys(mapMarkers).forEach(key => {
+    if (Number(key) !== mapNumber) map.removeLayer(mapMarkers[key]);
+  });
+
+  // Create LayerGroup for this map if it doesn't exist yet
+  if (!mapMarkers[mapNumber]) {
+    mapMarkers[mapNumber] = L.layerGroup();
+    createMapPins(mapNumber, mapMarkers[mapNumber]);
   }
 
-  if (data.title) {
-    showMapTitleAt(data.titleLat, data.titleLng, data.title);
-  }
+  // Add this map’s markers
+  mapMarkers[mapNumber].addTo(map);
 
-  // Add pins
-  createMapPins(mapNumber);
+  // Set initial view (only for Map 1)
+  if (mapNumber === 1) map.setView([300, data.width / 2], 0);
+
+  // Show map title
+  if (data.title) showMapTitleAt(data.titleLat, data.titleLng, data.title);
+
+  // Update the menu buttons glow
+  updateButtonGlow(mapNumber);
 }
 
+// ==================== BUTTON GLOW FUNCTION ====================
+function updateButtonGlow(mapNumber) {
+  document.querySelectorAll('.menu-btn').forEach(btn => {
+    btn.classList.toggle(
+      'active',
+      Number(btn.getAttribute('data-map')) === mapNumber
+    );
+  });
+}
+
+
+
 // ==================== MAP PIN CREATION ====================
-function createMapPins(mapNumber) {
+function createMapPins(mapNumber, markerGroups) {
   switch (mapNumber) {
     // -------------------- MAP 1 --------------------
     case 1:
 	  const knightIcon = L.divIcon({
-		 html: '<img src="Map1/knight.png" style="width:35px; height:53px;">',
+		 html: '<img src="Map1/knight.png" style="width:42px; height:64px;">',
 		 className: '',
-		 iconSize: [35, 53],
+		 iconSize: [42, 64],
 		});
 		
 	  const dummyIcon = L.divIcon({
-		 html: '<img src="Map1/dummy.png" style="width:26px; height:52px;">',
+		 html: '<img src="Map1/dummy.png" style="width:38px; height:75px;">',
 		 className: '',
-		 iconSize: [26, 52],
+		 iconSize: [38, 75],
 		});		
 		
 	  const gachaIcon = L.divIcon({
-		 html: '<img src="Map1/gacha.png" style="width:31px; height:50px;">',
+		 html: '<img src="Map1/gacha.png" style="width:53px; height:85px;">',
 		 className: '',
-		 iconSize: [31, 50],
+		 iconSize: [53, 85],
 		});
 		
 	  const vendingIcon = L.divIcon({
-		 html: '<img src="Map1/vending.png" style="width:30px; height:60px;">',
+		 html: '<img src="Map1/vending.png" style="width:49px; height:97px;">',
 		 className: '',
-		 iconSize: [30, 60],
+		 iconSize: [49, 97],
 		});	
 
 	  const kurohanyanIcon = L.divIcon({
-		 html: '<img src="Map1/player.png" style="width:42px; height:53px;">',
+		 html: '<img src="Map1/kurohanyan.png" style="width:60px; height:60px;">',
 		 className: '',
-		 iconSize: [42, 53],
+		 iconSize: [60, 60],
 		});			
 		
 	  const trashIcon = L.divIcon({
-		 html: '<img src="Map1/trash.png" style="width:35px; height:45px;">',
+		 html: '<img src="Map1/trash.png" style="width:48px; height:60px;">',
 		 className: '',
-		 iconSize: [35, 45],
+		 iconSize: [48, 60],
 		});	
 				
-      L.marker([100, 206], { icon: playerIcon })
+      L.marker([159, 410], { icon: playerIcon })
         .bindPopup('Spawn Point', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 		
-      L.marker([1025, 410], { icon: knightIcon })
+      L.marker([2033, 825], { icon: knightIcon })
         .bindPopup('Weird Knight', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 		
-      L.marker([1079, 469], { icon: gachaIcon })
+      L.marker([2170, 940], { icon: gachaIcon })
         .bindPopup('Gachapon Machine', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 
-      L.marker([1080, 645], { icon: vendingIcon })
-        .bindPopup('Vending Machine', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);			
+      L.marker([2165, 1282], { icon: vendingIcon })
+        .bindPopup('Vending Machine', { className: 'pin_popup', offset: [15, -40] })
+        .addTo(markerGroups);			
 
-      L.marker([953, 708], { icon: kurohanyanIcon })
+      L.marker([1904, 1416], { icon: kurohanyanIcon })
         .bindPopup('Mysterious Warrior', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 	
-      L.marker([780, 345], { icon: dummyIcon })
+      L.marker([1560, 690], { icon: dummyIcon })
         .bindPopup('Scarecrow', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 		
-      L.marker([512, 254], { icon: trashIcon })
+      L.marker([755, 455], { icon: trashIcon })
         .bindPopup('Trash Can', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 
-      L.marker([1130, 49], { icon: chest1DivIcon })
+      L.marker([2269, 70], { icon: chest1DivIcon })
         .bindPopup('Chest - R13', { className: 'pin_popup', offset: [15, -20] })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 		
-      L.marker([370, 620], { icon: asabaDivIcon })
-        .bindPopup('ASABA', { className: 'pin_popup', offset: [20, -65] })
-        .addTo(currentMarkers);		
+      L.marker([734, 1474], { icon: asabaDivIcon })
+        .bindPopup('ASABA (Random)', { className: 'pin_popup', offset: [20, -65] })
+        .addTo(markerGroups);	
 
-	  L.marker([950, 660], { icon: bonfireDivIcon })
-	  .bindPopup('Bonfire', { className: 'pin_popup', offset: [15, -50] })
-	  .addTo(currentMarkers);
+	  L.circleMarker([745, 1562], {
+		radius: 25,              
+		color: 'transparent',
+		fillColor: 'transparent',
+		fillOpacity: 0,
+		})
+		.bindPopup('Strawberry/Chili', { className: 'pin_popup', offset: [20, -20] })
+		.addTo(markerGroups);
 
-      const rightArrow = L.marker([315, 858], { icon: rightArrowDivIcon })
-        .addTo(currentMarkers);
+	  L.marker([1925, 1280], { icon: bonfireDivIcon })
+	  .bindPopup('Bonfire', { className: 'pin_popup', offset: [15, -80] })
+	  .addTo(markerGroups);
+
+      const rightArrow = L.marker([635, 1730], { icon: rightArrowDivIcon })
+        .addTo(markerGroups);
 		
-      const rightArrow2 = L.marker([717, 863], { icon: rightArrowDivIcon })
-        .addTo(currentMarkers);
+      const rightArrow2 = L.marker([1389, 1718], { icon: rightArrowDivIcon })
+        .addTo(markerGroups);
 		
-      const downArrow = L.marker([5, 203], { icon: downArrowDivIcon })
-		.bindPopup('Go home early - R1', { className: 'pin_popup', offset: [20, -65] })
-        .addTo(currentMarkers);
+      const downArrow = L.marker([25, 407], { icon: downArrowDivIcon })
+		.bindPopup('Go home early - R1', { className: 'pin_popup', offset: [20, -25] })
+        .addTo(markerGroups);
 
       rightArrow.on('click', () => loadMap(2));
 	  rightArrow2.on('click', () => loadMap(2));
 
-      const upArrow = L.marker([1120, 540], { icon: upArrowDivIcon })
-        .addTo(currentMarkers);
+      const upArrow = L.marker([2281, 1083], { icon: upArrowDivIcon })
+        .addTo(markerGroups);
 
       upArrow.on('click', () => loadMap(2));
       break;
@@ -307,7 +524,7 @@ function createMapPins(mapNumber) {
     // -------------------- MAP 2 --------------------
     case 2:
       const leftArrow = L.marker([225, 26], { icon: leftArrowDivIcon })
-        .addTo(currentMarkers);
+        .addTo(markerGroups);
 
       leftArrow.on('click', () => loadMap(1));
       break;
@@ -317,8 +534,14 @@ function createMapPins(mapNumber) {
     // case 4: ...
   }
 
-  // Add the marker group to map
-  currentMarkers.addTo(map);
+}
+
+// After defining showCategory() and highlightCategory()
+const startingBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
+if (startingBtn) {
+  const startingCategory = startingBtn.dataset.category;
+  showCategory(startingCategory);
+  highlightCategory(startingCategory);
 }
 
 // ==================== INITIAL MAP LOAD ====================
@@ -330,6 +553,35 @@ map.on('click', function (e) {
   const x = e.latlng.lng.toFixed(0);
   alert(`Coordinates: [${y}, ${x}]`);
 });
+
+const mapIcon = document.getElementById('map-icon');
+const mapMenu = document.getElementById('map-menu');
+
+mapMenu.style.display = 'none'; // hide initially
+
+mapIcon.addEventListener('click', () => {
+  mapMenu.style.display = mapMenu.style.display === 'none' ? 'block' : 'none';
+
+  if (mapMenu.style.display === 'block') {
+    // Show only the current map’s category
+    const currentBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
+    if (currentBtn) {
+      const category = currentBtn.dataset.category;
+      showCategory(category);
+      highlightCategory(category);
+    }
+  }
+});
+
+// Make map buttons work
+document.querySelectorAll('.menu-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mapNumber = Number(btn.getAttribute('data-map')); // convert to number
+    loadMap(mapNumber);
+    mapMenu.style.display = 'none';
+  });
+});
+
 
 	
   </script>
