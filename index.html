@@ -2999,7 +2999,7 @@ document.addEventListener('DOMContentLoaded', () => {
   muteBtn.classList.add('map-btn');
   muteBtn.style.width = '43px';
   muteBtn.style.height = '61px';
-  muteBtn.style.backgroundImage = 'url(unmute.png)'; 
+  muteBtn.style.backgroundImage = 'url(Unmute.png)'; 
   muteBtn.style.backgroundSize = 'cover';
   muteBtn.style.cursor = 'pointer';
   muteBtn.style.marginTop = '-2px';
@@ -3011,10 +3011,10 @@ document.addEventListener('DOMContentLoaded', () => {
   muteBtn.addEventListener('click', () => {
     if (!muted) {
       bgm.pause();
-      muteBtn.style.backgroundImage = 'url(mute.png)';
+      muteBtn.style.backgroundImage = 'url(Mute.png)';
     } else {
       bgm.play().catch(() => console.log('BGM autoplay prevented'));
-      muteBtn.style.backgroundImage = 'url(unmute.png)';
+      muteBtn.style.backgroundImage = 'url(Unmute.png)';
     }
     muted = !muted;
   });
