@@ -2908,7 +2908,6 @@ document.addEventListener('DOMContentLoaded', () => {
   bgm.loop = true;
   bgm.volume = 0.03;
 
-  // Initialize map hidden
   loadMap(1);
   map.invalidateSize();
 
@@ -2919,38 +2918,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (started) return;
     started = true;
 
-    // Play video and BGM
     loadingVideo.play().catch(() => console.log('Video autoplay prevented'));
     bgm.play().catch(() => console.log('BGM autoplay prevented'));
 
-    // Remove the click listener so it only triggers once
     loadingVideo.removeEventListener('click', startExperience);
   };
 
-  // Freeze video at first frame
   loadingVideo.pause();
   loadingVideo.currentTime = 0;
 
-  // Click on video starts everything
   loadingVideo.addEventListener('click', startExperience);
 
-  // Map fade-in and popup logic
   loadingVideo.addEventListener('timeupdate', () => {
     if (loadingVideo.currentTime >= 6 && !mapShown) {
       mapShown = true;
 
-      // Fade in map
       mapEl.classList.add('visible');
 
-      // Fade out loading screen
       loadingScreen.style.transition = 'opacity 1s ease';
       loadingScreen.style.opacity = '0';
       setTimeout(() => { loadingScreen.style.display = 'none'; }, 1000);
 
-      // Force Leaflet to recalc
+
       setTimeout(() => { map.invalidateSize(); }, 50);
 
-      // Show popup if needed
       const popup = document.getElementById('popup-message');
       const popupClose = document.getElementById('popup-close');
 
@@ -2969,30 +2960,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==================== EXTRA ICON BUTTONS ====================
   const mapButtonsContainer = document.createElement('div');
-  mapButtonsContainer.style.position = 'fixed'; // fixed so it follows viewport
+  mapButtonsContainer.style.position = 'fixed'; 
   mapButtonsContainer.style.display = 'flex';
   mapButtonsContainer.style.flexDirection = 'column';
   mapButtonsContainer.style.gap = '10px';
   mapButtonsContainer.style.zIndex = '1000';
   document.body.appendChild(mapButtonsContainer);
 
-  const mapIcon = document.getElementById('map-icon'); // use existing map icon
+  const mapIcon = document.getElementById('map-icon'); 
 
-  // Position buttons below map icon
   const updateButtonPosition = () => {
     const rect = mapIcon.getBoundingClientRect();
-    mapButtonsContainer.style.top = `${rect.bottom + 10}px`; // 10px below
+    mapButtonsContainer.style.top = `${rect.bottom + 10}px`;
     mapButtonsContainer.style.left = `${rect.left}px`;
   };
   updateButtonPosition();
   window.addEventListener('resize', updateButtonPosition);
 
-  // Help button
   const helpBtn = document.createElement('div');
   helpBtn.classList.add('map-btn');
   helpBtn.style.width = '43px';
   helpBtn.style.height = '61px';
-  helpBtn.style.backgroundImage = 'url(help.png)'; // your icon
+  helpBtn.style.backgroundImage = 'url(help.png)'; 
   helpBtn.style.backgroundSize = 'cover';
   helpBtn.style.cursor = 'pointer';
   mapButtonsContainer.appendChild(helpBtn);
@@ -3006,15 +2995,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Mute/unmute button
   const muteBtn = document.createElement('div');
   muteBtn.classList.add('map-btn');
   muteBtn.style.width = '43px';
   muteBtn.style.height = '61px';
-  muteBtn.style.backgroundImage = 'url(unmute.png)'; // your icon
+  muteBtn.style.backgroundImage = 'url(unmute.png)'; 
   muteBtn.style.backgroundSize = 'cover';
   muteBtn.style.cursor = 'pointer';
-  muteBtn.style.marginTop = '-2px'; // adjust value as needed 
+  muteBtn.style.marginTop = '-2px';
   muteBtn.style.marginLeft = '-1px';  
   
   mapButtonsContainer.appendChild(muteBtn);
