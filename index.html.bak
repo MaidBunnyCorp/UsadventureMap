@@ -37,18 +37,18 @@
   }
 
 	.map-title {
-	  position: fixed;       /* stays on top of the viewport */
-	  top: 20px;             /* distance from the top */
-	  left: 50%;             /* horizontally centered */
+	  position: fixed;    
+	  top: 20px;       
+	  left: 50%;    
 	  transform: translateX(-50%);
-	  color: white;          /* text color */
+	  color: white;  
 	  font-size: 18px;
 	  text-align: center;
-	  pointer-events: none;  /* doesn’t block clicks */
-	  opacity: 0;            /* start invisible */
-	  transition: opacity 0.6s ease; /* smooth fade in/out */
-	  white-space: pre-line; /* allow \n to break lines */
-	  z-index: 9999;         /* above everything else */
+	  pointer-events: none;  
+	  opacity: 0;    
+	  transition: opacity 0.6s ease; 
+	  white-space: pre-line; 
+	  z-index: 9999;   
 	}
 
 
@@ -73,7 +73,6 @@
 	  cursor: pointer;
 	}
 
-	/* Example, replace with your icons */
 	#help-btn {
 	  background-image: url('help.png');
 	}
@@ -83,36 +82,78 @@
 
 	.popup-message {
 	  position: fixed;
-	  top: 20%;
+	  top: 15%;
 	  left: 50%;
 	  transform: translateX(-50%);
-	  background: rgba(0,0,0,0.85);
+	  background: rgba(0,0,0,0.9);
 	  color: #fff;
-	  padding: 20px 25px;
-	  border-radius: 12px;
+	  padding: 25px 30px;
+	  border-radius: 14px;
 	  z-index: 9999;
-	  display: none; /* hidden by default */
-	  max-width: 300px;
-	  text-align: center;
-	  font-family: sans-serif;
+	  display: none;
+	  max-width: 800px;
+	  text-align: left;
+	  font-family: 'Segoe UI', sans-serif;
+	  line-height: 1.5;
+	  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 	}
 
+	.popup-message h2 {
+	  margin-top: 0;
+	  margin-bottom: 10px;
+	  font-size: 1.5em;
+	  text-align: center;
+	}
+
+	.popup-message h3 {
+	  margin-top: 15px;
+	  margin-bottom: 8px;
+	  font-size: 1.2em;
+	  border-bottom: 1px solid #ff9800;
+	  padding-bottom: 2px;
+	}
+
+	.popup-body p {
+	  margin-bottom: 10px;
+	}
+
+	.popup-body ul {
+	  padding-left: 20px;
+	  margin: 0;
+	}
+
+	.popup-body li {
+	  margin-bottom: 5px;
+	}
+	
+	.popup-body {
+	  max-height: 400px; 
+	  overflow-y: auto;
+	  padding-right: 5px; 
+	}	
+
 	.popup-message button {
-	  margin-top: 10px;
-	  padding: 5px 12px;
+	  display: block;
+	  margin: 15px auto 0 auto;
+	  padding: 8px 18px;
 	  border: none;
 	  border-radius: 6px;
 	  cursor: pointer;
 	  background-color: #ff9800;
-	  color: white;
+	  color: #fff;
 	  font-weight: bold;
-	}  
+	  transition: 0.2s;
+	}
+
+	.popup-message button:hover {
+	  background-color: #e68a00;
+	}
 
 	.leaflet-popup.pin_popup .leaflet-popup-tip {
-	  background: transparent; /* important */
+	  background: transparent;
 	  border-left: 5px solid transparent;
 	  border-right: 5px solid transparent;
-	  border-top: 30px solid #fff; /* the arrow color */
+	  border-top: 30px solid #fff; 
 	  width: 0;
 	  height: 0;
 	}
@@ -121,14 +162,12 @@
     box-shadow: none;
   }
 
-  /* Map title styling */
 	.map-title {
 	  position: absolute;
 	  color: white;
 	  font-size: 50px;
 	  font-weight: bold;
 	  font-family: "FOT-NewCinemaAStd-D", sans-serif;
-	  /* create outline with multiple shadows */
 	  text-shadow:
 		 2px 2px 0 black,
 		-2px 2px 0 black,
@@ -160,14 +199,14 @@
 	}
 	
 	#watermark {
-	  position: fixed; /* stays on screen */
-	  bottom: 10px;       /* distance from top */
-	  right: 20px;     /* distance from right */
+	  position: fixed; 
+	  bottom: 10px;  
+	  right: 20px;     
 	  font-size: 16px;
 	  font-weight: bold;
-	  color: rgba(255, 255, 255, 0.5); /* semi-transparent */
-	  pointer-events: none; /* lets clicks go through */
-	  z-index: 2000;  /* above map and buttons */
+	  color: rgba(255, 255, 255, 0.5); 
+	  pointer-events: none; 
+	  z-index: 2000;  
 	}
 
 	
@@ -178,10 +217,10 @@
 	
 	#map-menu {
 	  display: flex;
-	  flex-direction: column;   /* stack items vertically */
-	  align-items: center;      /* center everything horizontally */
-	  gap: 8px;                 /* spacing between buttons */
-	  min-width: 250px;         /* menu won’t shrink too small */
+	  flex-direction: column;   
+	  align-items: center;     
+	  gap: 8px;                
+	  min-width: 250px;         
 	  background: rgba(30, 30, 30, 0.9);
 	  padding: 10px;
 	  border-radius: 10px;
@@ -213,7 +252,7 @@
 	#menu-content {
 	  display: flex;
 	  flex-direction: column;
-	  align-items: center;      /* center the map buttons horizontally */
+	  align-items: center;      
 	  width: 100%;
 	}	
 
@@ -247,9 +286,9 @@
 	}
 	
 	#close-menu {
-	  display: block;           /* ensures it’s a block */
-	  width: 50%;               /* or any % you like */
-	  margin: 10px auto 0 auto; /* top/bottom margin, left/right auto to center */
+	  display: block;          
+	  width: 50%;               
+	  margin: 10px auto 0 auto; 
 	  background: #c0392b;
 	  color: white;
 	  border: none;
@@ -266,12 +305,12 @@
 		
 	#map-category-menu {
 	  display: flex;
-	  gap: 6px;         /* spacing between categories */
+	  gap: 6px;         /
 	  margin-bottom: 10px;
 	}
 
 	.category-btn {
-	  background: #2a4d69;   /* keep it simple */
+	  background: #2a4d69;   
 	  color: #fff;
 	  border: 2px solid #3b6d8b;
 	  border-radius: 6px;
@@ -280,7 +319,7 @@
 	}
 
 	.category-btn.active {
-	  background: #4fc1e9;   /* highlight selected category */
+	  background: #4fc1e9;   
 	  color: #222;
 	}
 
@@ -295,9 +334,64 @@
 <img id="map-icon" src="MapIcon.png" alt="Map toggle">
 
 <div id="popup-message" class="popup-message">
-  <p>Welcome to the Usadventure Map 1.0, a guide map for the game! Though it's still in its early stages, the whole map has already been thoroughly laid out, meaning hidden events and other details are all shown for you to see. I hope you find this map helpful and if you find any serious bugs, let me know in Discord. -Ruika </p>
+  <h2>Usadventure Map 1.0</h2>
+  <div class="popup-body">
+    <p>Welcome to the Usadventure Map 1.0, a guide map for the game!</p>
+    <p>Though it's still in its early stages, the whole map has already been thoroughly laid out, meaning hidden events and other details are all shown for you to see.</p>
+    <p>Mobile optimization is still ongoing, so expect some issues when the map is opened on mobile.</p>
+    <p>I hope you find this map helpful and if you find any serious bugs, let me know in Discord.</p>
+	<p>-Ruika</p>
+
+    <h3>Map ID List</h3>
+    <div class="map-id-list">
+      <div>1 - Adventurer's Path: Gathering Point</div>
+      <div>2 - Grove - 1</div>
+      <div>3 - Hunter's Lodge</div>
+      <div>4 - Basement</div>
+      <div>5 - Nibelungen</div>
+      <div>6 - Grove - 2</div>
+      <div>7 - Monument</div>
+      <div>8 - Ruined Forest</div>
+      <div>9 - Forest of Ruins</div>
+      <div>10 - Forest of Ruins - 2</div>
+      <div>11 - Forest of Ruins - 3</div>
+      <div>12 - Forest of Ruins - 4</div>
+      <div>13 - Forest of Ruins - 1</div>
+      <div>14 - In front of the Ruins Gate</div>
+      <div>15 - Abandoned Forest</div>
+      <div>16 - Abandoned Forest Start (Trail- 1)</div>
+      <div>17 - Abandoned Forest (Trail - 2)</div>
+      <div>18 - Abandoned Forest (Trail - 3)</div>
+      <div>19 - Abandoned Forest (Trail - 4)</div>
+      <div>20 - Abandoned Forest (Trail - 5)</div>
+      <div>21 - Abandoned Forest (Trail - 6)</div>
+      <div>22 - Abandoned Forest (Trail - 7)</div>
+      <div>23 - Abandoned Forest (Trail - 8)</div>
+      <div>24 - Abandoned Forest (Trail - 9)</div>
+      <div>25 - Abandoned Forest (Trail - 10)</div>
+      <div>26 - Abandoned Forest (Trail - 11)</div>
+      <div>27 - Abandoned Forest (End)</div>
+      <div>28 - Mountain Cave</div>
+      <div>29 - Excavation Site (Mine Tunnels)</div>
+      <div>30 - Excavation Site (Mine Tunnels) - 1</div>
+      <div>31 - Excavation Site (Mine Tunnels) - 2</div>
+      <div>32 - Excavation Site (Mine Tunnels) - 3</div>
+      <div>33 - Excavation Site (Mine Tunnels) - 4</div>
+      <div>34 - Shallow Ruins Labyrinth</div>
+      <div>35 - Forgotten Catacombs</div>
+      <div>36 - Forgotten Catacombs Upper Level</div>
+      <div>37 - Forgotten Catacombs Lower Level</div>
+      <div>38 - Scorching Lava Zone</div>
+      <div>39 - Forgotten Catacombs Hideout</div>
+      <div>40 - The Fallen Sanctuary</div>
+    </div>
+
+  </div>
   <button id="popup-close">Okay</button>
 </div>
+
+
+
 
 <div id="map-menu">
   <div id="map-category-menu">
@@ -331,7 +425,7 @@
     <!-- Abandoned Forest maps -->
     <button class="menu-btn" data-map="15" data-category="abandoned">Abandoned Forest</button>
     <button class="menu-btn" data-map="16" data-category="abandoned">Abandoned Forest Start (Trail 1)</button>		
-    <button class="menu-btn" data-map="16" data-category="abandoned">Abandoned Forest End</button>	
+    <button class="menu-btn" data-map="27" data-category="abandoned">Abandoned Forest End</button>	
     <!-- Mines maps -->
     <button class="menu-btn" data-map="29" data-category="mines">Excavation Site (Mine Tunnels)</button>
     <button class="menu-btn" data-map="30" data-category="mines">Excavation Site (Mine Tunnels) - 1</button>
@@ -451,6 +545,13 @@ const playerIcon = L.divIcon({
   className: '',
   iconSize: [53, 64],
 });
+
+const questionIcon = L.divIcon({
+  html: '<img src="questionmark.png" style="width:46px; height:46px;">',
+  className: '',
+  iconSize: [46, 46],
+});	
+
 
 const bonfireDivIcon = L.divIcon({
   html: '<img src="Map1/bonfire.gif" style="width:46px; height:95px;">',
@@ -830,6 +931,8 @@ function loadMap(mapNumber) {
 
   const data = mapData[mapNumber];
   if (!data) { alert('Map not found: ' + mapNumber); return; }
+  
+  currentMapTitle = data.title;
 
   const bounds = [[0, 0], [data.height, data.width]];
 
@@ -857,6 +960,10 @@ function loadMap(mapNumber) {
   map.setView([initialLat, initialLng], 0);
 
   updateButtonGlow(mapNumber);
+  if (window.INTRO_DONE) {
+  showMapTitle(data.title);
+}
+  
 }
 
 
@@ -1005,9 +1112,9 @@ function createMapPins(mapNumber, markerGroups) {
 		});			
 		
 	  const yenIcon = L.divIcon({
-		 html: '<img src="Map2/5000yen.png" style="width:40px; height:24px;">',
+		 html: '<img src="Map2/5000yen.png" style="width:40px; height:25px;">',
 		 className: '',
-		 iconSize: [40, 24],
+		 iconSize: [40, 25],
 		});
 		
       L.marker([1192, 505], { icon: doorIcon })
@@ -1042,14 +1149,9 @@ function createMapPins(mapNumber, markerGroups) {
         .bindPopup('Hidden 5000 Yen - R7', { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);		
 		
-	  L.circleMarker([465, 1894], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Random Item", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);		
+      L.marker([500, 1894], { icon: questionIcon })
+        .bindPopup("Random Items", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
 		
 	  leftArrow.on('click', () => loadMap(1));
 	  upArrow.on('click', () => loadMap(3));
@@ -1066,32 +1168,30 @@ function createMapPins(mapNumber, markerGroups) {
 	  const leftArrow = L.marker([254, 410], { icon: leftArrowDivIcon })
 		.addTo(markerGroups);
 		
-	  L.circleMarker([437, 313], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Hunter's Garb - R69", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);
+	  const beltIcon = L.divIcon({
+		 html: '<img src="Map3&4/belt.png" style="width:29x; height:33px;">',
+		 className: '',
+		 iconSize: [29, 33],
+		});
+		
+	  const garbIcon = L.divIcon({
+		 html: '<img src="Map3&4/garb.png" style="width:32x; height:32px;">',
+		 className: '',
+		 iconSize: [32, 32],
+		});
+		
+		
+      L.marker([437, 313], { icon: garbIcon })
+        .bindPopup("Hunter's Garb - R69", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
 
-	  L.circleMarker([475, 409], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Hunter's Belt - R69", { className: 'pin_popup', offset: [20, -20] })
-		.addTo(markerGroups);
+      L.marker([475, 409], { icon: beltIcon })
+        .bindPopup("Hunter's Belt - R69", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
 
-	  L.circleMarker([271, 359], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Basement Entrance - R70", { className: 'pin_popup', offset: [20, -20] })
-		.addTo(markerGroups);			
+      L.marker([300, 359], { icon: questionIcon })
+        .bindPopup("Basement Entrance - R70", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
 		
 	  leftArrow.on('click', () => loadMap(4));
 	  downArrow.on('click', () => loadMap(2));
@@ -1103,24 +1203,26 @@ function createMapPins(mapNumber, markerGroups) {
 	case 4: {
 	  const upArrow = L.marker([290, 505], { icon: upArrowDivIcon })
 		.addTo(markerGroups);
+		
+	  const badgeIcon = L.divIcon({
+		 html: '<img src="Map3&4/badge.png" style="width:29x; height:31px;">',
+		 className: '',
+		 iconSize: [29, 31],
+		});
+		
+	  const daggerIcon = L.divIcon({
+		 html: '<img src="Map3&4/dagger.png" style="width:24x; height:26px;">',
+		 className: '',
+		 iconSize: [24, 26],
+		});		
 	  
-	  L.circleMarker([220, 552], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Bladekeeper's Badge - R70", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);
+      L.marker([220, 552], { icon: badgeIcon })
+        .bindPopup("Bladekeeper's Badge - R70", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);	
 
-	  L.circleMarker([322, 407], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Hunter's Dagger - R70", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);	
+      L.marker([322, 407], { icon: daggerIcon })
+        .bindPopup("Hunter's Dagger - R70", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);	
 		
 	  upArrow.on('click', () => loadMap(3));
 
@@ -1194,14 +1296,9 @@ function createMapPins(mapNumber, markerGroups) {
 		.bindPopup("Strawberry", { className: 'pin_popup', offset: [20, -10] })
 		.addTo(markerGroups);
 
-	  L.circleMarker([1664, 1463], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Random Item", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);			
+      L.marker([1700, 1463], { icon: questionIcon })
+        .bindPopup("Random Items", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);				
 		
 	  leftArrow.on('click', () => loadMap(2));
 	  upArrow.on('click', () => loadMap(8));
@@ -1250,14 +1347,13 @@ function createMapPins(mapNumber, markerGroups) {
 		.bindPopup("Rubber Ducky - R9", { className: 'pin_popup', offset: [20, -10] })
 		.addTo(markerGroups);
 
-	  L.circleMarker([852, 490], {
-		radius: 35,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Random Items - R14", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);			
+      L.marker([880, 490], { icon: questionIcon })
+        .bindPopup("Random Items - R14", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
+
+      L.marker([810, 460], { icon: questionIcon })
+        .bindPopup("This monument tells you how many times you've died in your save file", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
 		
 	  leftArrow.on('click', () => loadMap(6));
 	  break;
@@ -1449,23 +1545,13 @@ function createMapPins(mapNumber, markerGroups) {
         .bindPopup('Chili', { className: 'pin_popup', offset: [20, -10] })
         .addTo(markerGroups);		
 
-	  L.circleMarker([223, 3668], {
-		radius: 40,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Random Items - R15", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);		
+      L.marker([250, 3668], { icon: questionIcon })
+        .bindPopup("Random Items - R15", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);			
 		
-	  L.circleMarker([800, 2301], {
-		radius: 35,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Cave Entrance - R10", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);	
+      L.marker([840, 2301], { icon: questionIcon })
+        .bindPopup("Cave Entrance - R10", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
 		
 	  upArrow.on('click', () => loadMap(34));
 	  rightArrow.on('click', () => loadMap(14));
@@ -1528,7 +1614,7 @@ function createMapPins(mapNumber, markerGroups) {
         .addTo(markerGroups);			
 					
 		
-	  //upArrow.on('click', () => loadMap(14));
+	  upArrow.on('click', () => loadMap(34));
 	  downArrow.on('click', () => loadMap(9));
 	  upArrow2.on('click', () => loadMap(28));
 	  leftArrow.on('click', () => loadMap(12));
@@ -2273,18 +2359,19 @@ function createMapPins(mapNumber, markerGroups) {
 		 iconSize: [33, 33],
 		});
 		
+	  const gelIcon = L.divIcon({
+		 html: '<img src="Map33/gel.png" style="width:24x; height:24px;">',
+		 className: '',
+		 iconSize: [24, 24],
+		});		
+		
       L.marker([1000, 1080], { icon: swordIcon })
         .bindPopup("Rusty Iron Sword - R74", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);
 		
-	  L.circleMarker([748, 1847], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Small Mana Gel - R76", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);
+      L.marker([748, 1847], { icon: gelIcon })
+        .bindPopup("Small Mana Gel - R76", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
 
 	  L.circleMarker([657, 502], {
 		radius: 35,              
@@ -2294,15 +2381,10 @@ function createMapPins(mapNumber, markerGroups) {
 		})
 		.bindPopup("Anvil - R75", { className: 'pin_popup', offset: [20, -10] })
 		.addTo(markerGroups);
-
-	  L.circleMarker([855, 1563], {
-		radius: 25,              
-		color: 'transparent',
-		fillColor: 'transparent',
-		fillOpacity: 0,
-		})
-		.bindPopup("Secret Passage - R63", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);			
+		
+      L.marker([880, 1563], { icon: questionIcon })
+        .bindPopup("Secret Passage - R63", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);			
 
 	  upArrow.on('click', () => loadMap(32));
 	  upArrow2.on('click', () => loadMap(36));
@@ -2469,12 +2551,6 @@ function createMapPins(mapNumber, markerGroups) {
 		 className: '',
 		 iconSize: [46, 87],
 		});
-		
-	  const questionIcon = L.divIcon({
-		 html: '<img src="Map35/questionmark.png" style="width:46px; height:46px;">',
-		 className: '',
-		 iconSize: [46, 46],
-		});		
 		
 	  const tomb1Icon = L.divIcon({
 		 html: '<img src="Map35/tomb1.png" style="width:44px; height:58px;">',
@@ -2735,18 +2811,12 @@ function createMapPins(mapNumber, markerGroups) {
         .addTo(markerGroups);	
 
       L.marker([1382, 524], { icon: bossIcon })
-        .bindPopup("Frenzied Crimson Beast - R42", { className: 'pin_popup', offset: [20, -20] })
+        .bindPopup("BOSS - Frenzied Crimson Beast - R42", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);
 
       L.marker([1481, 284], { icon: fallenIcon })
         .bindPopup("Fallen Sanctuary - R45", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);			
-		
-	  const questionIcon = L.divIcon({
-		 html: '<img src="Map35/questionmark.png" style="width:46px; height:46px;">',
-		 className: '',
-		 iconSize: [46, 46],
-		});	
 		
       L.marker([1049, 573], { icon: questionIcon })
         .bindPopup("Jump down to Scorching Lava Zone - R55", { className: 'pin_popup', offset: [20, -20] })
@@ -2762,12 +2832,6 @@ function createMapPins(mapNumber, markerGroups) {
 
     // -------------------- MAP 38: Scorching Lava Zone--------------------
 	case 38: {
-		
-	  const questionIcon = L.divIcon({
-		 html: '<img src="Map35/questionmark.png" style="width:46px; height:46px;">',
-		 className: '',
-		 iconSize: [46, 46],
-		});	
 		
 	  const ringIcon = L.divIcon({
 		 html: '<img src="Map38/ring.png" style="width:27px; height:26px;">',
@@ -2794,14 +2858,7 @@ function createMapPins(mapNumber, markerGroups) {
 		
 	  L.marker([280, 408], { icon: bonfireDivIcon })
 	  .bindPopup('Bonfire', { className: 'pin_popup', offset: [15, -80] })
-	  .addTo(markerGroups);			
-						
-		
-	  const questionIcon = L.divIcon({
-		 html: '<img src="Map35/questionmark.png" style="width:46px; height:46px;">',
-		 className: '',
-		 iconSize: [46, 46],
-		});	
+	  .addTo(markerGroups);						
 		
       L.marker([160, 650], { icon: questionIcon })
         .bindPopup("Random Items - R19", { className: 'pin_popup', offset: [20, -20] })
@@ -2838,12 +2895,6 @@ function createMapPins(mapNumber, markerGroups) {
 		 iconSize: [45, 42],
 		});	
 
-	  const questionIcon = L.divIcon({
-		 html: '<img src="Map35/questionmark.png" style="width:46px; height:46px;">',
-		 className: '',
-		 iconSize: [46, 46],
-		});
-
 	  const glovesIcon = L.divIcon({
 		 html: '<img src="Map40/gloves.png" style="width:46px; height:46px;">',
 		 className: '',
@@ -2862,7 +2913,7 @@ function createMapPins(mapNumber, markerGroups) {
 		
 		
       L.marker([1230, 1088], { icon: pedestalIcon })
-        .bindPopup("", { className: 'pin_popup', offset: [20, -20] })
+        .bindPopup("Why are you even clicking this?", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);
 
       L.marker([1255, 1008], { icon: shioneIcon, zIndexOffset: 100 })
@@ -2899,7 +2950,7 @@ if (startingBtn) {
   highlightCategory(startingCategory);
 }
 
-// ==================== INITIAL MAP LOAD WITH VIDEO ====================
+// ==================== INITIAL MAP LOAD WITH VIDEO (with safe mapId support) ====================
 document.addEventListener('DOMContentLoaded', () => {
   const loadingScreen = document.getElementById('loading-screen');
   const loadingVideo = document.getElementById('loading-video');
@@ -2908,8 +2959,21 @@ document.addEventListener('DOMContentLoaded', () => {
   bgm.loop = true;
   bgm.volume = 0.03;
 
-  // Initialize map hidden
-  loadMap(1);
+  // ---- SAFE MAP ID ----
+  let mapNumber = 1; // default map
+  const urlParams = new URLSearchParams(window.location.search);
+  const mapIdParam = urlParams.get('mapId');
+  if (mapIdParam) {
+    const parsed = parseInt(mapIdParam, 10);
+    if (!isNaN(parsed) && parsed >= 1 && parsed <= 40) {
+      mapNumber = parsed;
+    } else {
+      console.warn(`Invalid mapId in URL: ${mapIdParam}, falling back to map 1`);
+    }
+  }
+
+  // ---- INITIAL MAP LOAD ----
+  loadMap(mapNumber);
   map.invalidateSize();
 
   let mapShown = false;
@@ -2919,80 +2983,71 @@ document.addEventListener('DOMContentLoaded', () => {
     if (started) return;
     started = true;
 
-    // Play video and BGM
     loadingVideo.play().catch(() => console.log('Video autoplay prevented'));
     bgm.play().catch(() => console.log('BGM autoplay prevented'));
 
-    // Remove the click listener so it only triggers once
     loadingVideo.removeEventListener('click', startExperience);
   };
 
-  // Freeze video at first frame
   loadingVideo.pause();
   loadingVideo.currentTime = 0;
 
-  // Click on video starts everything
   loadingVideo.addEventListener('click', startExperience);
 
-  // Map fade-in and popup logic
   loadingVideo.addEventListener('timeupdate', () => {
-    if (loadingVideo.currentTime >= 6 && !mapShown) {
+    if (loadingVideo.currentTime >= 5.9 && !mapShown) {
       mapShown = true;
 
-      // Fade in map
       mapEl.classList.add('visible');
 
-      // Fade out loading screen
       loadingScreen.style.transition = 'opacity 1s ease';
       loadingScreen.style.opacity = '0';
-      setTimeout(() => { loadingScreen.style.display = 'none'; }, 1000);
 
-      // Force Leaflet to recalc
-      setTimeout(() => { map.invalidateSize(); }, 50);
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
 
-      // Show popup if needed
-      const popup = document.getElementById('popup-message');
-      const popupClose = document.getElementById('popup-close');
+        // ✅ ORIGINAL code intact
+        window.INTRO_DONE = true;
+        showMapTitle(currentMapTitle);
 
-      if (!localStorage.getItem('mapPopupShown')) {
-        popup.style.display = 'block';
-        popupClose.addEventListener('click', () => {
-          popup.style.display = 'none';
-          localStorage.setItem('mapPopupShown', 'true');
-          showMapTitle("Adventurer's Path: Gathering Point\n冒險者小道:集結地\n冒険の遊歩道:集結地");
-        });
-      } else {
-        showMapTitle("Adventurer's Path: Gathering Point\n冒險者小道:集結地\n冒険の遊歩道:集結地");
-      }
+        const popup = document.getElementById('popup-message');
+        const popupClose = document.getElementById('popup-close');
+        if (!localStorage.getItem('mapPopupShown')) {
+          popup.style.display = 'block';
+          popupClose.addEventListener('click', () => {
+            popup.style.display = 'none';
+            localStorage.setItem('mapPopupShown', 'true');
+          });
+        }
+
+      }, 300); // ✅ setTimeout closed
     }
-  });
+  }); // ✅ loadingVideo timeupdate closed
 
   // ==================== EXTRA ICON BUTTONS ====================
   const mapButtonsContainer = document.createElement('div');
-  mapButtonsContainer.style.position = 'fixed'; // fixed so it follows viewport
+  mapButtonsContainer.style.position = 'fixed'; 
   mapButtonsContainer.style.display = 'flex';
   mapButtonsContainer.style.flexDirection = 'column';
   mapButtonsContainer.style.gap = '10px';
   mapButtonsContainer.style.zIndex = '1000';
   document.body.appendChild(mapButtonsContainer);
 
-  const mapIcon = document.getElementById('map-icon'); // use existing map icon
+  const mapIcon = document.getElementById('map-icon'); 
 
-  // Position buttons below map icon
   const updateButtonPosition = () => {
     const rect = mapIcon.getBoundingClientRect();
-    mapButtonsContainer.style.top = `${rect.bottom + 10}px`; // 10px below
+    mapButtonsContainer.style.top = `${rect.bottom + 10}px`;
     mapButtonsContainer.style.left = `${rect.left}px`;
   };
   updateButtonPosition();
   window.addEventListener('resize', updateButtonPosition);
 
-  // Help button
   const helpBtn = document.createElement('div');
   helpBtn.classList.add('map-btn');
   helpBtn.style.width = '43px';
   helpBtn.style.height = '61px';
-  helpBtn.style.backgroundImage = 'url(help.png)'; // your icon
+  helpBtn.style.backgroundImage = 'url(help.png)'; 
   helpBtn.style.backgroundSize = 'cover';
   helpBtn.style.cursor = 'pointer';
   mapButtonsContainer.appendChild(helpBtn);
@@ -3006,16 +3061,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Mute/unmute button
   const muteBtn = document.createElement('div');
   muteBtn.classList.add('map-btn');
   muteBtn.style.width = '43px';
   muteBtn.style.height = '61px';
-  muteBtn.style.backgroundImage = 'url(unmute.png)'; // your icon
+  muteBtn.style.backgroundImage = 'url(Mute.png)'; 
   muteBtn.style.backgroundSize = 'cover';
   muteBtn.style.cursor = 'pointer';
-  muteBtn.style.marginTop = '1px'; // adjust value as needed 
-  muteBtn.style.marginLeft = '-1px';  
+  muteBtn.style.marginTop = '-15px';
+  muteBtn.style.marginLeft = '-2px';  
   
   mapButtonsContainer.appendChild(muteBtn);
 
@@ -3023,14 +3077,16 @@ document.addEventListener('DOMContentLoaded', () => {
   muteBtn.addEventListener('click', () => {
     if (!muted) {
       bgm.pause();
-      muteBtn.style.backgroundImage = 'url(mute.png)';
+      muteBtn.style.backgroundImage = 'url(Unmute.png)';
     } else {
       bgm.play().catch(() => console.log('BGM autoplay prevented'));
-      muteBtn.style.backgroundImage = 'url(unmute.png)';
+      muteBtn.style.backgroundImage = 'url(Mute.png)';
     }
     muted = !muted;
   });
-});
+
+}); // ✅ DOMContentLoaded closed
+
 
 
 
@@ -3065,7 +3121,7 @@ document.querySelectorAll('.menu-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const mapNumber = Number(btn.getAttribute('data-map')); 
     loadMap(mapNumber);
-    mapMenu.style.display = 'none';
+    mapMenu.style.display = 'none';	
   });
 });
 
