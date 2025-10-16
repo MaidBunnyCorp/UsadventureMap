@@ -21,8 +21,25 @@
   height: 100vh; 
   opacity: 0;  
   transition: opacity 0.5s ease;
-  background-color: #254786; 
 
+
+  background-color: #ffbde4; /* static pink */
+
+  /* overlay for glossy streak */
+  background-image: linear-gradient(
+    to top, 
+    rgba(255,255,255,0.0) 0%, 
+    rgba(255,255,255,0.6) 50%, 
+    rgba(255,255,255,0.0) 100%
+  );
+  background-size: 200% 200%;
+  animation: glossyMove 6s linear infinite;
+
+}
+
+@keyframes glossyMove {
+  0% { background-position: 200% 200%; }
+  100% { background-position: -200% -200%; }
 }
 
 #map.visible {
@@ -3044,7 +3061,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bgm.volume = 0.03;
   
   if (isMobile) {
-  loadingVideo.src = 'LoadingMobile2.mp4'; 
+  loadingVideo.src = 'LoadingMobile.mp4'; 
   loadingVideo.load(); 
   }
 
@@ -3215,5 +3232,51 @@ document.querySelectorAll('.menu-btn').forEach(btn => {
 
   </script>
 <div id="map-title" class="map-title"></div>
+
+<script>
+function startCarrotRain() {
+  const container = document.getElementById('map');
+
+  setInterval(() => {
+    const carrot = document.createElement('img');
+    carrot.src = 'carrotbg.png';
+    carrot.style.position = 'absolute';
+    carrot.style.width = '65px';
+    carrot.style.height = '70px';
+    carrot.style.pointerEvents = 'none';
+    carrot.style.opacity = '1';
+    carrot.style.zIndex = 0;
+
+    const startX = Math.random() * (container.offsetWidth * 1.2) - container.offsetWidth * 0.1;
+    const startY = -80;
+    carrot.style.left = `${startX}px`;
+    carrot.style.top = `${startY}px`;
+
+    container.appendChild(carrot);
+
+    const driftX = -container.offsetWidth * (0.2 + Math.random() * 0.4);
+    const endY = container.offsetHeight + 150;
+    const duration = 9000 + Math.random() * 4000;
+
+    carrot.animate(
+      [
+        { transform: 'translate(0, 0)', opacity: 1 },
+        { transform: `translate(${driftX}px, ${endY}px)`, opacity: 1 }
+      ],
+      {
+        duration,
+        easing: 'linear',
+        fill: 'forwards'
+      }
+    );
+
+    setTimeout(() => carrot.remove(), duration);
+  }, 1800);
+}
+
+document.addEventListener('DOMContentLoaded', startCarrotRain);
+</script>
+
+
 </body>
 </html>

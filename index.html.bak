@@ -21,8 +21,25 @@
   height: 100vh; 
   opacity: 0;  
   transition: opacity 0.5s ease;
-  background-color: #254786; 
 
+
+  background-color: #ffbde4; /* static pink */
+
+  /* overlay for glossy streak */
+  background-image: linear-gradient(
+    to top, 
+    rgba(255,255,255,0.0) 0%, 
+    rgba(255,255,255,0.6) 50%, 
+    rgba(255,255,255,0.0) 100%
+  );
+  background-size: 200% 200%;
+  animation: glossyMove 6s linear infinite;
+
+}
+
+@keyframes glossyMove {
+  0% { background-position: 200% 200%; }
+  100% { background-position: -200% -200%; }
 }
 
 #map.visible {
@@ -74,7 +91,7 @@
 	}
 
 	#help-btn {
-	  background-image: url('help.png');
+	  background-image: url('helpL.png');
 	}
 	#second-btn {
 	  background-image: url('mute.png');
@@ -3044,7 +3061,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bgm.volume = 0.03;
   
   if (isMobile) {
-  loadingVideo.src = 'LoadingMobile2.mp4'; 
+  loadingVideo.src = 'LoadingMobile.mp4'; 
   loadingVideo.load(); 
   }
 
@@ -3135,7 +3152,7 @@ document.addEventListener('DOMContentLoaded', () => {
   helpBtn.classList.add('map-btn');
   helpBtn.style.width = '43px';
   helpBtn.style.height = '61px';
-  helpBtn.style.backgroundImage = 'url(help.png)'; 
+  helpBtn.style.backgroundImage = 'url(helpL.png)'; 
   helpBtn.style.backgroundSize = 'cover';
   helpBtn.style.cursor = 'pointer';
   mapButtonsContainer.appendChild(helpBtn);
@@ -3153,7 +3170,7 @@ document.addEventListener('DOMContentLoaded', () => {
   muteBtn.classList.add('map-btn');
   muteBtn.style.width = '43px';
   muteBtn.style.height = '61px';
-  muteBtn.style.backgroundImage = 'url(Mute.png)'; 
+  muteBtn.style.backgroundImage = 'url(MuteL.png)'; 
   muteBtn.style.backgroundSize = 'cover';
   muteBtn.style.cursor = 'pointer';
   muteBtn.style.marginTop = '-15px';
@@ -3165,10 +3182,10 @@ document.addEventListener('DOMContentLoaded', () => {
   muteBtn.addEventListener('click', () => {
     if (!muted) {
       bgm.pause();
-      muteBtn.style.backgroundImage = 'url(Unmute.png)';
+      muteBtn.style.backgroundImage = 'url(UnmuteL.png)';
     } else {
       bgm.play().catch(() => console.log('BGM autoplay prevented'));
-      muteBtn.style.backgroundImage = 'url(Mute.png)';
+      muteBtn.style.backgroundImage = 'url(MuteL.png)';
     }
     muted = !muted;
   });
@@ -3215,5 +3232,53 @@ document.querySelectorAll('.menu-btn').forEach(btn => {
 
   </script>
 <div id="map-title" class="map-title"></div>
+
+<script>
+function startCarrotRain() {
+  const container = document.getElementById('map');
+
+  setInterval(() => {
+    const carrot = document.createElement('img');
+    carrot.src = 'carrotbg.png';
+    carrot.style.position = 'absolute';
+    carrot.style.width = '65px';
+    carrot.style.height = '70px';
+    carrot.style.pointerEvents = 'none';
+    carrot.style.opacity = '1';
+    carrot.style.zIndex = 0;
+
+    // 🌟 spawn across full width (plus small overshoot on both sides)
+    const startX = Math.random() * (container.offsetWidth * 1.2) - container.offsetWidth * 0.1;
+    const startY = -80;
+    carrot.style.left = `${startX}px`;
+    carrot.style.top = `${startY}px`;
+
+    container.appendChild(carrot);
+
+    // 🎯 gentler diagonal drift (balanced coverage)
+    const driftX = -container.offsetWidth * (0.2 + Math.random() * 0.4); // less extreme
+    const endY = container.offsetHeight + 150;
+    const duration = 9000 + Math.random() * 4000;
+
+    carrot.animate(
+      [
+        { transform: 'translate(0, 0)', opacity: 1 },
+        { transform: `translate(${driftX}px, ${endY}px)`, opacity: 1 }
+      ],
+      {
+        duration,
+        easing: 'linear',
+        fill: 'forwards'
+      }
+    );
+
+    setTimeout(() => carrot.remove(), duration);
+  }, 1800);
+}
+
+document.addEventListener('DOMContentLoaded', startCarrotRain);
+</script>
+
+
 </body>
 </html>
