@@ -1022,7 +1022,9 @@ function loadMap(mapNumber) {
 
   const maxWidth = Math.min(data.width, 5000);
   const maxHeight = Math.min(data.height, 4300);
-  map.setMaxBounds([[0, 0], [maxHeight, maxWidth]]);
+	const padX = maxWidth * 0.1;
+	const padY = maxHeight * 0.1;
+	map.setMaxBounds([[-padY, -padX], [maxHeight + padY, maxWidth + padX]]);
 
   Object.keys(mapMarkers).forEach(key => {
     if (Number(key) !== mapNumber) map.removeLayer(mapMarkers[key]);
