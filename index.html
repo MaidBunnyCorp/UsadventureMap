@@ -1022,9 +1022,9 @@ function loadMap(mapNumber) {
 
   const maxWidth = Math.min(data.width, 5000);
   const maxHeight = Math.min(data.height, 4300);
-	const padX = maxWidth * 0.1;
-	const padY = maxHeight * 0.1;
-	map.setMaxBounds([[-padY, -padX], [maxHeight + padY, maxWidth + padX]]);
+  const padX = maxWidth * 0.1;
+  const padY = maxHeight * 0.1;
+  map.setMaxBounds([[-padY, -padX], [maxHeight + padY, maxWidth + padX]]);
 
   Object.keys(mapMarkers).forEach(key => {
     if (Number(key) !== mapNumber) map.removeLayer(mapMarkers[key]);
@@ -1377,8 +1377,11 @@ function createMapPins(mapNumber, markerGroups) {
 		 iconSize: [50, 51],
 		});
 		
-      L.marker([2100, 787], { icon: signpostIcon })
-        .bindPopup('Signpost - R64', { className: 'pin_popup', offset: [30, -20] })
+	  L.marker([2100, 787], { icon: signpostIcon, interactive: false })
+	  .addTo(markerGroups);	
+
+      L.marker([2150, 787], { icon: questionIcon })
+        .bindPopup("Break this signpost to access the hidden path - R64", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);		
 
       L.marker([625, 1272], { icon: potatoIcon })
@@ -1399,7 +1402,7 @@ function createMapPins(mapNumber, markerGroups) {
 		.addTo(markerGroups);
 
       L.marker([1700, 1463], { icon: questionIcon })
-        .bindPopup("Random Items", { className: 'pin_popup', offset: [20, -20] })
+        .bindPopup("Temperance Card (resets every rainy day)", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);				
 		
 	  leftArrow.on('click', () => loadMap(2));
@@ -1474,7 +1477,15 @@ function createMapPins(mapNumber, markerGroups) {
 		
       L.marker([1055, 663], { icon: chest1DivIcon })
         .bindPopup('Chest - R66', { className: 'pin_popup', offset: [20, -40] })
-        .addTo(markerGroups);				
+        .addTo(markerGroups);
+
+      L.marker([200, 650], { icon: questionIcon })
+        .bindPopup("Use Weird Feather weapon, then spin or use staff weapons and float to get across or use Fallen Mage Shoes to dash through the trees", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
+
+      L.marker([952, 275], { icon: questionIcon })
+        .bindPopup("You can walk through here if you want to pick up the stone fragment after beating the boss", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
 
       L.marker([1468, 601], { icon: carrotIcon })
         .bindPopup('Carrot', { className: 'pin_popup', offset: [20, -10] })
@@ -1761,6 +1772,10 @@ function createMapPins(mapNumber, markerGroups) {
       L.marker([745, 886], { icon: plant1Icon })
         .bindPopup('Correct Way', { className: 'pin_popup', offset: [20, -10] })
         .addTo(markerGroups);
+		
+      L.marker([795, 890], { icon: questionIcon })
+        .bindPopup("Follow the glowing plants/mushrooms", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
 
 	  rightArrow.on('click', () => loadMap(17)); //correct path
 	  downArrow.on('click', () => loadMap(15)); //back to entrance
@@ -1804,7 +1819,11 @@ function createMapPins(mapNumber, markerGroups) {
 		fillOpacity: 0,
 		})
 		.bindPopup("Correct Way", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);				
+		.addTo(markerGroups);	
+
+      L.marker([933, 653], { icon: questionIcon })
+        .bindPopup("Follow the glowing plants/mushrooms", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
 
 	  rightArrow.on('click', () => loadMap(18)); //loop
 	  downArrow.on('click', () => loadMap(16)); //back to start
@@ -1844,7 +1863,12 @@ function createMapPins(mapNumber, markerGroups) {
 		fillOpacity: 0,
 		})
 		.bindPopup("Correct Way", { className: 'pin_popup', offset: [20, -10] })
-		.addTo(markerGroups);	
+		.addTo(markerGroups);
+
+      L.marker([1080, 249], { icon: questionIcon })
+        .bindPopup("Follow the glowing plants/mushrooms", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);
+		
 	  leftArrow.on('click', () => loadMap(20)); //correct
 	  downArrow.on('click', () => loadMap(18)); //backwards
 	  upArrow.on('click', () => loadMap(16)); //back to start
@@ -2441,6 +2465,10 @@ function createMapPins(mapNumber, markerGroups) {
         .bindPopup("Jeweled Armament - R73", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);
 
+      L.marker([1091, 1226], { icon: questionIcon })
+        .bindPopup("Use Weird Feather weapon, then spin or use staff weapons and float to get across to get this item", { className: 'pin_popup', offset: [20, -20] })
+        .addTo(markerGroups);		
+
 	  downArrow.on('click', () => loadMap(31));
 	  downArrow2.on('click', () => loadMap(33));
 	  
@@ -2530,7 +2558,7 @@ function createMapPins(mapNumber, markerGroups) {
         .addTo(markerGroups);
 		
       L.marker([1010, 365], { icon: chest2DivIcon })
-        .bindPopup("Chest - R25", { className: 'pin_popup', offset: [20, -20] })
+        .bindPopup("Chest - R25 (contains Chariot card)", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);		
 		
       L.marker([1015, 4100], { icon: doorIcon })
@@ -3019,7 +3047,7 @@ function createMapPins(mapNumber, markerGroups) {
         .addTo(markerGroups);
 
       L.marker([1255, 1008], { icon: shioneIcon, zIndexOffset: 100 })
-        .bindPopup("Archdemon", { className: 'pin_popup', offset: [20, -20] })
+        .bindPopup("Archdemon - R92, R93", { className: 'pin_popup', offset: [20, -20] })
         .addTo(markerGroups);
 
       L.marker([1230, 1011], { icon: altarIcon, zIndexOffset: 0 })
@@ -3200,11 +3228,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ==================== DEBUG COORDINATES ON CLICK ====================
-//map.on('click', function (e) {
-  //const y = e.latlng.lat.toFixed(0);
-  //const x = e.latlng.lng.toFixed(0);
-  //alert(`Coordinates: [${y}, ${x}]`);
-//});
+map.on('click', function (e) {
+  const y = e.latlng.lat.toFixed(0);
+  const x = e.latlng.lng.toFixed(0);
+  alert(`Coordinates: [${y}, ${x}]`);
+});
 
 const mapIcon = document.getElementById('map-icon');
 const mapMenu = document.getElementById('map-menu');
