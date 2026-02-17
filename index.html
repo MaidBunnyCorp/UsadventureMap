@@ -1005,7 +1005,14 @@ function loadMap(mapNumber) {
       width: 2016,
       height: 1728,
       title: "The Fallen Sanctuary\n墮落的聖堂\n堕落の聖堂",
-    },		
+    },
+
+    41: {
+      file: 'Map41/Map41.png',
+      width: 2352,
+      height: 1200,
+      title: "Adventurer's Path: Grove - 3\n冒險者小道:林間 - 3\n冒険の遊歩道:林間 - 3",
+    },	
 	
   };
 
@@ -1201,6 +1208,9 @@ function createMapPins(mapNumber, markerGroups) {
 	  const rightArrow = L.marker([1050, 2269], { icon: rightArrowDivIcon })
 		.addTo(markerGroups);
 		
+	  const downArrow = L.marker([316, 700], { icon: downArrowDivIcon })
+		.addTo(markerGroups);
+		
 	  const doorIcon = L.divIcon({
 		 html: '<img src="Map2/Door.png" style="width:48px; height:78px;">',
 		 className: '',
@@ -1258,6 +1268,7 @@ function createMapPins(mapNumber, markerGroups) {
 	  leftArrow.on('click', () => loadMap(1));
 	  upArrow.on('click', () => loadMap(3));
 	  rightArrow.on('click', () => loadMap(6));
+	  downArrow.on('click', () => loadMap(41));	  
 
 	  break;
 	}
@@ -3008,7 +3019,7 @@ function createMapPins(mapNumber, markerGroups) {
 	  break;
 	}
 	
-    // -------------------- MAP 39: The Fallen Sanctuary --------------------
+    // -------------------- MAP 40: The Fallen Sanctuary --------------------
 	case 40: {
 	  const downArrow = L.marker([44, 1006], { icon: downArrowDivIcon })
 		.addTo(markerGroups);
@@ -3063,6 +3074,32 @@ function createMapPins(mapNumber, markerGroups) {
 	  break;
 	}
 	
+    // -------------------- MAP 41: Adventurer's Path: Grove - 3 --------------------
+	case 41: {
+	  const upArrow = L.marker([1086, 1176], { icon: upArrowDivIcon })
+		.addTo(markerGroups);					
+
+	  const leftArrow = L.marker([420, 30], { icon: leftArrowDivIcon })
+		.addTo(markerGroups);					
+		
+	  const rightArrow = L.marker([520, 2320], { icon: rightArrowDivIcon })
+		.addTo(markerGroups);					
+				
+	  L.circleMarker([530, 2092], {
+		radius: 40,              
+		color: 'transparent',
+		fillColor: 'transparent',
+		fillOpacity: 0,
+		})
+		.bindPopup("ASABA (Random) - R77", { className: 'pin_popup', offset: [20, -10] })
+		.addTo(markerGroups);		
+
+	  leftArrow.on('click', () => loadMap(6));
+	  rightArrow.on('click', () => loadMap(7));
+	  upArrow.on('click', () => loadMap(2));
+	  
+	  break;
+	}	
 
 	
     // -------------------- FUTURE MAPS --------------------	
@@ -3234,23 +3271,23 @@ document.addEventListener('DOMContentLoaded', () => {
   //alert(`Coordinates: [${y}, ${x}]`);
 //});
 
-const mapIcon = document.getElementById('map-icon');
-const mapMenu = document.getElementById('map-menu');
+//const mapIcon = document.getElementById('map-icon');
+//const mapMenu = document.getElementById('map-menu');
 
-mapMenu.style.display = 'none';
+//mapMenu.style.display = 'none';
 
-mapIcon.addEventListener('click', () => {
-  mapMenu.style.display = mapMenu.style.display === 'none' ? 'block' : 'none';
+//mapIcon.addEventListener('click', () => {
+  //mapMenu.style.display = mapMenu.style.display === 'none' ? 'block' : 'none';
 
-  if (mapMenu.style.display === 'block') {
-    const currentBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
-    if (currentBtn) {
-      const category = currentBtn.dataset.category;
-      showCategory(category);
-      highlightCategory(category);
-    }
-  }
-});
+  //if (mapMenu.style.display === 'block') {
+    //const currentBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
+    //if (currentBtn) {
+      //const category = currentBtn.dataset.category;
+      //showCategory(category);
+      //highlightCategory(category);
+    //}
+  //}
+//});
 
 document.querySelectorAll('.menu-btn').forEach(btn => {
   btn.addEventListener('click', () => {
