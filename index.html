@@ -3271,23 +3271,23 @@ document.addEventListener('DOMContentLoaded', () => {
   //alert(`Coordinates: [${y}, ${x}]`);
 //});
 
-//const mapIcon = document.getElementById('map-icon');
-//const mapMenu = document.getElementById('map-menu');
+const mapIcon = document.getElementById('map-icon');
+const mapMenu = document.getElementById('map-menu');
 
-//mapMenu.style.display = 'none';
+mapMenu.style.display = 'none';
 
-//mapIcon.addEventListener('click', () => {
-  //mapMenu.style.display = mapMenu.style.display === 'none' ? 'block' : 'none';
+mapIcon.addEventListener('click', () => {
+  mapMenu.style.display = mapMenu.style.display === 'none' ? 'block' : 'none';
 
-  //if (mapMenu.style.display === 'block') {
-    //const currentBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
-    //if (currentBtn) {
-      //const category = currentBtn.dataset.category;
-      //showCategory(category);
-      //highlightCategory(category);
-    //}
-  //}
-//});
+  if (mapMenu.style.display === 'block') {
+    const currentBtn = document.querySelector(`.menu-btn[data-map="${currentMap}"]`);
+    if (currentBtn) {
+      const category = currentBtn.dataset.category;
+      showCategory(category);
+      highlightCategory(category);
+    }
+  }
+});
 
 document.querySelectorAll('.menu-btn').forEach(btn => {
   btn.addEventListener('click', () => {
